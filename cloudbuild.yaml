@@ -1,3 +1,3 @@
 steps:
   - name: gcr.io/cloud-builders/gsutil
-    args: ["-m", "rsync", "-r", "-c", "-d", ".", "gs://xplorers.learnwithpras.xyz"]
+    args: ["cp", "404.html", "error.png", "index.html", "gs://xplorers.learnwithpras.xyz"]
