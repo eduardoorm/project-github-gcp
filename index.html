@@ -39,18 +39,58 @@
             color: white;
             font-size: 1.4em;
             text-align: center;
-            margin-top: 20px;
             animation: fadeIn 3s ease-out;
         }
 
     </style>
 </head>
 <body>
-    <h1>XPLORERS</h1>
-    <h3>
-        Together, we cultivate a community where learning is a shared journey,
-        knowledge is freely exchanged, and growth is a collective triumph.
-    </h3>
+    <h1>XPLORERS AI</h1>
+    <style>
+        input[type="text"] {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 400px;
+        }
+
+        input[type="text"]::placeholder {
+            color: #ccc;
+        }
+
+    </style>
+    <input type="text" id="userQuery" placeholder="Ask a question..." />
+    <br>
+    <button id="callAI" style="padding: 10px;">Send</button>
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('callAI').addEventListener('click', async () => {
+            const query = document.getElementById('userQuery').value;
+            if (!query) {
+                alert('Please enter a question.');
+                return;
+            }
+
+            try {
+                const response = await fetch('https://us-central1-pras-sandbox-405410.cloudfunctions.net/ask-gemini', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query })
+                });
+                const content = data.candidates[0].content.parts[0].text;
+                document.getElementById('response').innerHTML = marked(content);
+            } catch (error) {
+                console.error('Error calling AI:', error);
+            }
+        });
+    </script>
 </body>
 </body>
 </body>
