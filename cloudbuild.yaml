@@ -1,3 +1,43 @@
 steps:
-  - name: gcr.io/cloud-builders/gsutil
-    args: ["cp", "404.html", "error.png", "index.html", "gs://xplorers.learnwithpras.xyz"]
+  # - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  #   entrypoint: gcloud
+  #   args:
+  #     - auth
+  #     - application-default
+  #     - login
+  #     - --scopes
+  #     - https://www.googleapis.com/auth/siteverification.verify_only,https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/sqlservice.login,openid
+  - id: tf plan
+    name: hashicorp/terraform:1.9.5
+    entrypoint: sh
+    args:
+      - -c
+      - |
+        apk add --no-cache curl bash nodejs npm
+        curl -sL https://taskfile.dev/install.sh | sh
+        mv ./bin/task /usr/local/bin/task
+        task --version
+
+        npm install -g pnpm
+        pnpm --version
+
+        npm install -g typescript
+        tsc --version
+
+        # Authenticate with gcloud and set scopes
+        # echo $$TERRAFORM_SERVICE_ACCOUNT_KEY > /tmp/key.json
+        # gcloud auth activate-service-account --key-file=/tmp/key.json
+        # gcloud auth application-default login --scopes=https://www.googleapis.com/auth/siteverification.verify_only,https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/sqlservice.login,openid
+
+        # Run the Taskfile command
+        task terraform-apply
+# serviceAccount: "terraform-cloudbuild-sa@pras-sandbox-405410.iam.gserviceaccount.com"
+# logsBucket: "logs-static-ai"
+# options:
+#   logging: GCS_ONLY
+#     secretEnv: ['TERRAFORM_SERVICE_ACCOUNT_KEY']
+# availableSecrets:
+#   secretManager:
+#   - versionName: projects/630923649102/secrets/terraform-cloudbuild-sa-service-account/versions/latest
+#     env: 'TERRAFORM_SERVICE_ACCOUNT_KEY'
+# serviceAccount: projects/630923649102/serviceAccounts/terraform-cloudbuild-sa@pras-sandbox-405410.iam.gserviceaccount.com

@@ -62,11 +62,28 @@
             color: #ccc;
         }
 
+        button {
+            margin-top: 10px; /* Add margin to create a gap */
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #ffffff;
+            color: black;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #a498c1;
+        }
     </style>
     <input type="text" id="userQuery" placeholder="Ask a question..." />
-    <br>
-    <button id="callAI" style="padding: 10px;">Send</button>
+    <button id="callAI">Send</button>
     <div id="response"></div>
+
+    <!-- Include marked.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
         document.getElementById('callAI').addEventListener('click', async () => {
@@ -77,15 +94,24 @@
             }
 
             try {
-                const response = await fetch('https://us-central1-pras-sandbox-405410.cloudfunctions.net/ask-gemini', {
+                const response = await fetch('${cloud_function_url}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ query })
                 });
-                const content = data.candidates[0].content.parts[0].text;
-                document.getElementById('response').innerHTML = marked(content);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('Response Data:', data);
+
+                const markdownContent = data.candidates[0].content.parts[0].text;
+                const htmlContent = marked.parse(markdownContent);
+                document.getElementById('response').innerHTML = htmlContent;
             } catch (error) {
                 console.error('Error calling AI:', error);
             }
