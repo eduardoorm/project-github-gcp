@@ -26,6 +26,8 @@ locals {
 #   depends_on = [google_project_service.siteverification]
 # }
 
+
+
 data "google_secret_manager_secret_version" "cloudflare-api-key" {
   project  = var.project_id
   provider = google-beta
@@ -36,14 +38,13 @@ provider "cloudflare" {
   api_token = data.google_secret_manager_secret_version.cloudflare-api-key.secret_data
 }
 
-data "cloudflare_zones" "zones" {
-  filter {
-    name = var.domain_name
-  }
+data "cloudflare_zone" "zone" {
+  name = var.domain_name
 }
 
+
 # resource "cloudflare_record" "siteverification" {
-#   zone_id = data.cloudflare_zones.zones.zones.0.id
+#   zone_id = data.cloudflare_zone.zone.id
 #   name    = var.domain_name
 #   type    = "TXT"
 #   content = data.googlesiteverification_dns_token.domain.record_value
@@ -58,7 +59,7 @@ data "cloudflare_zones" "zones" {
 # }
 
 resource "cloudflare_record" "cname_test_learnwithpras" {
-  zone_id = data.cloudflare_zones.zones.zones.0.id
+  zone_id = data.cloudflare_zone.zone.id
   name    = var.static_ai_website_bucket_name
   type    = "CNAME"
   content = "c.storage.googleapis.com"
