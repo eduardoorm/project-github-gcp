@@ -146,8 +146,8 @@ resource "google_cloudbuildv2_connection" "github-connection" {
 resource "google_cloudbuildv2_repository" "static-ai-repository" {
   location          = var.region
   parent_connection = google_cloudbuildv2_connection.github-connection.name
-  name              = "gcp-static-ai-site-publisher"
-  remote_uri        = "https://github.com/boltdynamics/gcp-static-ai-site-publisher.git"
+  name              = "project-github-gcp"
+  remote_uri        = "https://github.com/eduardoorm/project-github-gcp"
 }
 
 resource "google_cloudbuild_trigger" "build-static-ai-website" {
