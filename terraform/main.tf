@@ -15,6 +15,8 @@ locals {
   }
 }
 
+#
+
 # resource "google_project_service" "siteverification" {
 #   service = "siteverification.googleapis.com"
 # }
