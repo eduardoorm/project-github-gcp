@@ -213,7 +213,7 @@ resource "google_cloudfunctions2_function" "ask-ai-function" {
       project_id = var.project_id
       version    = "latest"
       key        = "GEMINI_AI_API_KEY"
-      secret     = "xplorers-gemini-ai-api-key"
+      secret     = "project-github-gcp-api-key"
     }
 
     environment_variables = {
